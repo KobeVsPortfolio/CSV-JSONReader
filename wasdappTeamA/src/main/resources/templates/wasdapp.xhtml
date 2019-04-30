@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui">
+    <head>
+        <link rel="stylesheet/less" type="text/css" href="styles.less" />
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <title>WasDapp</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+        <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+        <link rel="icon" href="https://i.imgur.com/JnS6xHp.jpg">
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>     
+        <script src="https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js"></script>
+    </head>
+    <body style="background-color: #4FA5B6">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="toggler">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="wasdapp"><th th:text="#{Home}"/></a></li>
+                    <li th:if="${currentUser.currentUser.role == 'admin'}" class="nav-item"><a class="nav-link" href="add"><th th:text="#{Add}"/></a></li>
+                    <li th:if="${currentUser.currentUser.role == 'admin'}" class="nav-item"><a class="nav-link" href="upload"><th th:text="#{Upload}"/></a></li>
+                    <li th:if="${currentUser.currentUser.role == 'admin'}" class="nav-item"><a class="nav-link" href="createUser"><th th:text="#{AddUser}"/></a></li>
+                </ul>
+            </div>
+            <div class="mx-auto order-0">
+                <a class="navbar-brand mx-auto" href="wasdapp">Wasdapp</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggler" aria-controls="toggler" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="toggler">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-text" ><a class="nav-link disabled" href="logout" style="color:white; font-weight: bold"><th th:text="#{Welcome} + ${currentUser.currentUser.name}"/></a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout"><th th:text="#{SignOut}"/></a></li>
+                    <select  class="btn btn-primary dropdown-toggle bg-dark"  id="locales">
+                        <option value=""><th th:text="#{language}"/></option>
+                        <option value="nl" th:text="#{lang.dutch}"></option>
+                        <option value="fr" th:text="#{lang.fr}"></option>
+                        <option value="eng" th:text="#{lang.eng}"></option>
+
+                    </select>
+
+                </ul>
+            </div>
+        </nav>
+        <div style="
+             width: 95%;
+             margin: 0px auto;
+             float: none;
+             padding-top: 14px;">
+            <form id="form" action="deleteItems" method="get">
+                <table id="tablePagination" class="table table-condensed table-hover text-centered compact" style="
+                       border-radius: 5px;
+                       width: 100%;
+                       background-color: white
+                       ">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th><input type="checkbox" id="checkAll"/></th>
+                            <th th:text="#{id}"></th>
+                            <th th:text="#{naam}"></th>
+                            <th th:text="#{locatie}"></th>
+                            <th th:text="#{adres}"></th>
+                            <th th:text="#{omschrijving}"></th>
+                            <th th:text="#{telefoon}"></th>
+                            <th th:text="#{email}"></th>
+                            <th th:text="#{aanmaakdatum}"></th>
+                            <th th:text="#{lat}"></th>
+                            <th th:text="#{lon}"></th>
+                            <th th:if="${currentUser.currentUser.role == 'admin'}"></th>
+                            <th th:if="${currentUser.currentUser.role == 'admin'}"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="entry : ${entries}">
+                            <td><input type="checkbox" class="check" name="id" th:value="${entry.id}" /></td>
+                            <td th:text="${entry.id}"></td>
+                            <td th:text="${entry.name}"></td>
+                            <td th:text="${entry.locatie}"></td>
+                            <td><a th:title="|${#strings.defaultString(entry.straat,nothing)} ${#strings.defaultString(entry.nummer,nothing)} ${#strings.defaultString(entry.gemeente,nothing)} ${#strings.defaultString(entry.postCode,nothing)} ${#strings.defaultString(entry.land,nothing)}|" data-toggle="tooltip" data-placement="right" style="margin:20px;"><i class="fas fa-map-marked-alt"></i></a></td>
+                            <td><a th:title="${entry.omschrijving}" data-toggle="tooltip" data-placement="right" style="margin:20px;">
+                                <i class="fas fa-info-circle"></i>
+                            </a></td>
+                            <td th:text="${entry.telefoonNummer}"></td>
+                            <td th:text="${entry.email}"></td>
+                            <td th:text="${entry.aanmaakDatum}"></td>
+                            <td th:text="${entry.lat}"></td>
+                            <td th:text="${entry.lon}"></td>
+                            <td th:if="${currentUser.currentUser.role == 'admin'}"><a th:href="@{/edit(id=${entry.id})}"><button type="button" class="btn btn-success btn-sm"><i class="material-icons">edit</i></button></a></td>
+                            <td th:if="${currentUser.currentUser.role == 'admin'}"><a th:href="@{/deleteItems(id=${entry.id})}"><button type="button" class="btn btn-danger btn-sm" onclick="return confirm('Delete entry?')"><i class="material-icons">delete</i></button></a></td>                        </tr>
+                    </tbody>
+                </table>
+                <button th:if="${currentUser.currentUser.role == 'admin'}" type="button" class="btn btn-danger"  data-toggle="modal" data-target="#confirm-delete"><th th:text="#{DeleteSelected}"</th></button>
+                <button type="submit" id="test2" class="btn btn-success">Download PDF</button>
+                
+                <input type="checkbox" name="id" value="-1" style="display:none" checked="checked" />
+                <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                              <th th:text="#{alert}"></th>  
+                            </div>
+                            <div class="modal-body">
+                              <th th:text="#{alertmessage}"></th>  
+                            </div>
+                            <div class="modal-footer">
+                                <button id="test1" type="submit" class="btn btn-danger btn-ok"><th th:text="#{DeleteSelected}"</th></button> 
+                                <button type="button" class="btn btn-default" data-dismiss="modal"><th th:text="#{cancel}"</th></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <script>
+                $(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+                });
+            </script>
+            <script>
+                $('#test1').click(function () {
+                    $('#form').attr('action', 'deleteItems');
+                    $('#form').submit();
+                });
+
+                $('#test2').click(function () {
+                    $('#form').attr('action', 'download');
+                    $('#form').submit();
+                });
+            </script>
+            <script>
+                $("#checkAll").click(function () {
+                    $(".check").prop('checked', $(this).prop('checked'));
+                });
+            </script>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $("#locales").change(function () {
+                        var selectedOption = $('#locales').val();
+                        if (selectedOption != '') {
+                            window.location.replace('wasdapp?lang=' + selectedOption);
+                        }
+                    });
+                });
+            </script>
+            <script>
+                $(document).ready(function () {
+                    $('#tablePagination').DataTable({
+                        "pageLength": 6,
+                        "lengthMenu": [ [6, 25, -1], [6, 25, "All"] ],
+                        "columnDefs": [ {
+                        "targets": [ 1, 2, 3, 6, 7, 8, 9, 10 ],
+                        "mRender": $.fn.dataTable.render.ellipsis(10)
+            }]
+                    });
+                });
+            </script>
+</div>
+    </body>
+</html>

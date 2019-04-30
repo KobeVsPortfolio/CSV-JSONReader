@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:b="http://bootsfaces.net/ui">
+    <head>
+        <link rel="stylesheet/less" type="text/css" href="styles.less" />
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <title>WasDapp</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap-theme.min.css" integrity="sha384-6pzBo3FDv/PJ8r2KRkGHifhEocL+1X2rVCTTkUfGk7/0pbek5mMa1upzvWbrUbOZ" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <link rel="icon" href="https://i.imgur.com/JnS6xHp.jpg">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    </head>
+    <body style="background-color: #4FA5B6">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2" id="toggler">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="wasdapp"><th th:text="#{Home}"/></a></li>
+                    <li class="nav-item"><a class="nav-link" href="add"><th th:text="#{Add}"/></a></li>
+                    <li class="nav-item"><a class="nav-link" href="upload"><th th:text="#{Upload}"/></a></li>
+                    <li class="nav-item"><a class="nav-link" href="createUser"><th th:text="#{AddUser}"/></a></li>
+                </ul>
+            </div>
+            <div class="mx-auto order-0">
+                <a class="navbar-brand mx-auto" href="wasdapp">Wasdapp</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#toggler" aria-controls="toggler" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse w-100 order-3 dual-collapse2" id="toggler">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-text" ><a class="nav-link disabled" href="logout" style="color:white; font-weight: bold"><th th:text="#{Welcome} + ${currentUser.currentUser.name}"/></a></li>
+                    <li class="nav-item"><a class="nav-link" href="logout"><th th:text="#{SignOut}"/></a></li>
+                    <select  class="btn btn-primary dropdown-toggle bg-dark"  id="locales">
+                        <option value=""><th th:text="#{language}"/></option>
+                        <option value="nl" th:text="#{lang.dutch}"></option>
+                        <option value="fr" th:text="#{lang.fr}"></option>
+                        <option value="eng" th:text="#{lang.eng}"></option>
+
+                    </select>
+
+                </ul>
+            </div>
+        </nav>
+        <div class="container" style="padding: 5%">
+            <img th:src="${image}">
+            <div>
+                <h3 style="color: red; font-size: 20px" th:inline="text" >
+                    <b>[[${string}]]</b>
+                </h3>
+                <h4 style="color: red; font-size: 20px" th:inline="text" >
+                    <b>[[${validFile}]]</b>
+                </h4>
+                <ul>
+                    <li th:text="${comma}" style="font-size: 18px; list-style-type: none"></li>
+                    <li th:text="${line}" style="font-size: 18px; list-style-type: none"></li>
+                    <li th:text="${carriage}" style="font-size: 18px; list-style-type: none"></li>
+                    <li th:text="${row}" style="font-size: 18px; list-style-type: none"></li>
+                    <li th:text="${title}" style="font-size: 18px; list-style-type: none"></li>
+                    <li th:text="${emptyLines}" style="font-size: 18px; list-style-type: none"></li>
+                </ul>
+            </div>
+            <form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+                <div class="custom-file">
+                    <input type="file" name="file" class="custom-file-input" id="upload" accept=".csv,.json" required>
+                    <label for="upload" class="custom-file-label"><th th:text="#{UploadMsg}"/></label>
+                </div>
+                <br>
+                <button type="submit" class="btn btn-success"><th th:text="#{Submit}"/></button>
+            </form>
+        </div>
+        <script>
+            $('#upload').on('change', function () {
+                var fileName = $(this).val();
+                var cleanFileName = fileName.replace('C:\\fakepath\\', " ");
+                $(this).next('.custom-file-label').html(cleanFileName);
+            })
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#locales").change(function () {
+                    var selectedOption = $('#locales').val();
+                    if (selectedOption != '') {
+                        window.location.replace('upload?lang=' + selectedOption);
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

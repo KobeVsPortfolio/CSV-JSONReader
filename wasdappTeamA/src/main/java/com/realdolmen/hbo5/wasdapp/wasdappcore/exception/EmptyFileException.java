@@ -1,0 +1,11 @@
+package com.realdolmen.hbo5.wasdapp.wasdappcore.exception;
+
+public class EmptyFileException extends Exception {
+
+    public EmptyFileException() {
+    }
+
+    public EmptyFileException(String message) {
+        super(message);
+    }
+}
